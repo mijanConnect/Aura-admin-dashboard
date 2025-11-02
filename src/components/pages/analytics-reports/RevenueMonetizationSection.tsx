@@ -29,7 +29,7 @@ const categoryOptions = [
   "All",
   "Free User",
   "Trial Signup",
-  "Converted to Paid"
+  "Converted to Paid",
 ];
 
 const maxValues = {
@@ -82,13 +82,20 @@ const Custom3DBarWithWatermark = ({
         <polygon
           points={`${x + width},${watermarkY} ${x + width + depth},${
             watermarkY - depth
-          } ${x + width + depth},${watermarkY + watermarkHeight} ${
-            x + width
-          },${watermarkY + watermarkHeight}`}
+          } ${x + width + depth},${watermarkY + watermarkHeight} ${x + width},${
+            watermarkY + watermarkHeight
+          }`}
           fill={fill}
         />
       </g>
-      <rect x={x} y={y} width={width} height={height} fill={fill} opacity={0.4} />
+      <rect
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        fill={fill}
+        opacity={0.4}
+      />
       <polygon
         points={`${x},${y} ${x + depth},${y - depth} ${x + width + depth},${
           y - depth
@@ -108,15 +115,33 @@ const Custom3DBarWithWatermark = ({
 };
 
 // Simple Card components
-const Card = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-  <div className={className}>{children}</div>
-);
+const Card = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => <div className={className}>{children}</div>;
 
-const CardContent = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-  <div className={className}>{children}</div>
-);
+const CardContent = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => <div className={className}>{children}</div>;
 
-const MetricsCards = ({ value, label, icons, percentage }: { value: string; label: string; icons: React.ReactNode; percentage: string }) => (
+const MetricsCards = ({
+  value,
+  label,
+  icons,
+  percentage,
+}: {
+  value: string;
+  label: string;
+  icons: React.ReactNode;
+  percentage: string;
+}) => (
   <div className="bg-white/30 backdrop-blur-sm rounded-lg p-4">
     <div className="text-2xl font-bold text-white mb-1">{value}</div>
     <div className="text-sm text-white/80 mb-2">{label}</div>
@@ -127,7 +152,13 @@ const MetricsCards = ({ value, label, icons, percentage }: { value: string; labe
   </div>
 );
 
-const PurchasesCard = ({ value, text }: { value: string | number; text: string }) => (
+const PurchasesCard = ({
+  value,
+  text,
+}: {
+  value: string | number;
+  text: string;
+}) => (
   <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/30">
     <div className="text-2xl font-bold text-white mb-1">{value}</div>
     <div className="text-xs text-white/70 uppercase">{text}</div>
@@ -161,7 +192,7 @@ const RevenueMonetizationSection = () => {
           <select
             value={fromMonth}
             onChange={(e) => setFromMonth(e.target.value)}
-            className="px-10 py-3 border border-gray-300 rounded-md bg-gray-500"
+            className="px-10 py-3 border border-gray-300 rounded-md bg-[#7C8B93]"
           >
             {monthOptions.map((option) => (
               <option key={option} value={option}>
@@ -176,7 +207,7 @@ const RevenueMonetizationSection = () => {
           <select
             value={toMonth}
             onChange={(e) => setToMonth(e.target.value)}
-            className="px-10 py-3 border border-gray-300 rounded-md bg-gray-500"
+            className="px-10 py-3 border border-gray-300 rounded-md bg-[#7C8B93]"
           >
             {monthOptions.map((option) => (
               <option key={option} value={option}>
@@ -191,7 +222,7 @@ const RevenueMonetizationSection = () => {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-10 py-3 border border-gray-300 rounded-md bg-gray-500"
+            className="px-10 py-3 border border-gray-300 rounded-md bg-[#7C8B93]"
           >
             {categoryOptions.map((option) => (
               <option key={option} value={option}>
@@ -219,7 +250,8 @@ const RevenueMonetizationSection = () => {
               <XAxis dataKey="month" axisLine={false} tickLine={false} />
               <YAxis axisLine={false} tickLine={false} />
               <Legend />
-              {(selectedCategory === "All" || selectedCategory === "Free User") && (
+              {(selectedCategory === "All" ||
+                selectedCategory === "Free User") && (
                 <Bar
                   dataKey="freeUser"
                   fill="#6366f1"
@@ -230,25 +262,33 @@ const RevenueMonetizationSection = () => {
                   )}
                 />
               )}
-              {(selectedCategory === "All" || selectedCategory === "Trial Signup") && (
+              {(selectedCategory === "All" ||
+                selectedCategory === "Trial Signup") && (
                 <Bar
                   dataKey="trialSignup"
                   fill="#f59e0b"
                   name="Trial Signup"
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   shape={(props: any) => (
-                    <Custom3DBarWithWatermark {...props} dataKey="trialSignup" />
+                    <Custom3DBarWithWatermark
+                      {...props}
+                      dataKey="trialSignup"
+                    />
                   )}
                 />
               )}
-              {(selectedCategory === "All" || selectedCategory === "Converted to Paid") && (
+              {(selectedCategory === "All" ||
+                selectedCategory === "Converted to Paid") && (
                 <Bar
                   dataKey="convertedToPaid"
                   fill="#10b981"
                   name="Converted to Paid"
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   shape={(props: any) => (
-                    <Custom3DBarWithWatermark {...props} dataKey="convertedToPaid" />
+                    <Custom3DBarWithWatermark
+                      {...props}
+                      dataKey="convertedToPaid"
+                    />
                   )}
                 />
               )}

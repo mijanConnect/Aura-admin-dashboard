@@ -4,7 +4,7 @@ import Navbar from "./Navbar";
 
 const Sidebar = () => {
   return (
-    <div className="w-64 border-r-1 border-white/80 bg-gradient-to-b  ">
+    <div className="w-64 border-r border-white/80 bg-gradient-to-b sticky top-0 h-screen overflow-y-auto">
       <div className="p-10 ">
         <Image
           src="/aura-logo.png"
