@@ -113,11 +113,7 @@ Navigate to [http://localhost:3000](http://localhost:3000)
 
 **Admin Account:**
 - Email: `admin@example.com`
-- Password: `admin123`
-
-**User Account:**
-- Email: `user@example.com` 
-- Password: `user123`
+- Password: `12345678`
 
 ### Authentication Features
 - Secure login/logout
