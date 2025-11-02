@@ -128,6 +128,14 @@ export function LoginForm() {
         </Button>
 
         {error && <div className="text-sm text-red-500">{error}</div>}
+
+        <div>
+          <p>Login Credential</p>
+          <pre>
+            Email: {dummyUsers[0].email} <br />
+            Password: {dummyUsers[0].password}
+          </pre>
+        </div>
       </form>
     </div>
   );

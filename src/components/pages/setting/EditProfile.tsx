@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Edit3, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const ProfileEditForm = () => {
   const [activeTab, setActiveTab] = useState("edit-profile");
@@ -24,11 +24,61 @@ const ProfileEditForm = () => {
     confirmPassword: "",
   });
 
+  // add image state + refs
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const prevUrlRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      // cleanup any created object URLs on unmount
+      if (prevUrlRef.current) {
+        URL.revokeObjectURL(prevUrlRef.current);
+        prevUrlRef.current = null;
+      }
+    };
+  }, []);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0] ?? null;
+    if (!f) return;
+    if (!f.type.startsWith("image/")) {
+      // invalid file type — ignore or show a toast in real app
+      return;
+    }
+    // revoke old URL
+    if (prevUrlRef.current) {
+      URL.revokeObjectURL(prevUrlRef.current);
+    }
+    const url = URL.createObjectURL(f);
+    prevUrlRef.current = url;
+    setProfileImageFile(f);
+    setProfileImageUrl(url);
+  };
+
+  const clearImage = () => {
+    if (prevUrlRef.current) {
+      URL.revokeObjectURL(prevUrlRef.current);
+      prevUrlRef.current = null;
+    }
+    setProfileImageFile(null);
+    setProfileImageUrl(null);
+    // also clear input value so same file can be picked again
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
   const handleProfileSave = async () => {
     setIsLoading(true);
-    // Simulate API call
+    // Simulate API call (include image file if present)
     await new Promise((resolve) => setTimeout(resolve, 2000));
     console.log("Profile saved:", profileData);
+    if (profileImageFile) {
+      // In a real app you'd upload via FormData
+      const form = new FormData();
+      form.append("avatar", profileImageFile);
+      console.log("Would upload image:", profileImageFile.name, form);
+    }
     setIsLoading(false);
   };
 
@@ -95,15 +145,54 @@ const ProfileEditForm = () => {
               <div className="flex items-center gap-6">
                 <div className="relative">
                   <div className="w-24 h-24 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center overflow-hidden">
-                    {/* Profile Image Placeholder */}
-                    <div className="w-full h-full bg-gradient-to-br from-amber-300 to-orange-500 flex items-center justify-center">
-                      <User className="w-12 h-12 text-white" />
-                    </div>
+                    {/* Show preview if available, otherwise placeholder */}
+                    {profileImageUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={profileImageUrl}
+                        alt="Profile preview"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-amber-300 to-orange-500 flex items-center justify-center">
+                        <User className="w-12 h-12 text-white" />
+                      </div>
+                    )}
                   </div>
-                  <button className="absolute bottom-0 right-0 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors">
+
+                  {/* Edit button triggers file input */}
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="absolute bottom-0 right-0 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors"
+                    aria-label="Change profile photo"
+                  >
                     <Edit3 className="w-4 h-4 text-slate-600" />
                   </button>
+
+                  {/* Remove image button (visible when preview present) */}
+                  {profileImageUrl && (
+                    <button
+                      type="button"
+                      onClick={clearImage}
+                      className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center shadow"
+                      aria-label="Remove profile photo"
+                    >
+                      ×
+                    </button>
+                  )}
+
+                  {/* hidden native file input */}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="sr-only"
+                    aria-hidden="true"
+                  />
                 </div>
+
                 <div>
                   <h2 className="text-2xl font-semibold text-white mb-1">
                     Mijanur Rahman

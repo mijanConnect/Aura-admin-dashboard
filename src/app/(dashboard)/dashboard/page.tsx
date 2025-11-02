@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import ChartHeader from "@/components/dashboard/ChartHeader";
 import EthnicityChart from "@/components/dashboard/EthnicityChart";
 import StatisticsDashboard from "@/components/dashboard/StatisticsDashboard";
@@ -14,12 +14,12 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  CartesianGrid
+  CartesianGrid,
 } from "recharts";
 
 // Extended data for different years and date ranges
 const allMatchesData = {
-  '2024': [
+  "2024": [
     { month: "Jan", matches: 20, line: 60 },
     { month: "Feb", matches: 35, line: 65 },
     { month: "Mar", matches: 25, line: 76 },
@@ -33,7 +33,7 @@ const allMatchesData = {
     { month: "Nov", matches: 35, line: 63 },
     { month: "Dec", matches: 25, line: 58 },
   ],
-  '2023': [
+  "2023": [
     { month: "Jan", matches: 18, line: 55 },
     { month: "Feb", matches: 28, line: 58 },
     { month: "Mar", matches: 22, line: 62 },
@@ -46,20 +46,32 @@ const allMatchesData = {
     { month: "Oct", matches: 38, line: 78 },
     { month: "Nov", matches: 28, line: 58 },
     { month: "Dec", matches: 20, line: 52 },
-  ]
+  ],
 };
 
 const allCrashFreeData = {
-  'current': [
+  current: [
     { version: "Day 1", percentage: 56 },
     { version: "Day 7", percentage: 64 },
     { version: "Day 30", percentage: 76 },
-   
-  ]
+  ],
 };
 
 // Custom tooltip component
-const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: { color?: string; name?: string; dataKey?: string; value: unknown }[]; label?: string }) => {
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}: {
+  active?: boolean;
+  payload?: {
+    color?: string;
+    name?: string;
+    dataKey?: string;
+    value: unknown;
+  }[];
+  label?: string;
+}) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-white/95 p-3 rounded-lg shadow-lg border border-gray-200">
@@ -84,30 +96,44 @@ const Page = () => {
     uptime: 99.98,
     latency: 82,
     errorRate: 0.03,
-    churnRate: 3.5
+    churnRate: 3.5,
   });
 
   // Real-time data updates
   useEffect(() => {
     const interval = setInterval(() => {
-      setRealTimeMetrics(prev => ({
-        uptime: Math.min(99.99, Math.max(99.90, prev.uptime + (Math.random() - 0.5) * 0.02)),
-        latency: Math.max(50, Math.min(120, prev.latency + (Math.random() - 0.5) * 8)),
-        errorRate: Math.max(0, Math.min(0.1, prev.errorRate + (Math.random() - 0.5) * 0.01)),
-        churnRate: Math.max(2, Math.min(5, prev.churnRate + (Math.random() - 0.5) * 0.2))
+      setRealTimeMetrics((prev) => ({
+        uptime: Math.min(
+          99.99,
+          Math.max(99.9, prev.uptime + (Math.random() - 0.5) * 0.02)
+        ),
+        latency: Math.max(
+          50,
+          Math.min(120, prev.latency + (Math.random() - 0.5) * 8)
+        ),
+        errorRate: Math.max(
+          0,
+          Math.min(0.1, prev.errorRate + (Math.random() - 0.5) * 0.01)
+        ),
+        churnRate: Math.max(
+          2,
+          Math.min(5, prev.churnRate + (Math.random() - 0.5) * 0.2)
+        ),
       }));
     }, 3000);
 
     return () => clearInterval(interval);
   }, []);
 
-  const currentMatchesData = (allMatchesData as Record<string, typeof allMatchesData['2024']>)['2024'];
-  const currentCrashFreeData = (allCrashFreeData as Record<string, typeof allCrashFreeData['current']>)['current'];
+  const currentMatchesData = (
+    allMatchesData as Record<string, (typeof allMatchesData)["2024"]>
+  )["2024"];
+  const currentCrashFreeData = (
+    allCrashFreeData as Record<string, (typeof allCrashFreeData)["current"]>
+  )["current"];
 
   return (
     <div>
-     
-
       <div className="flex gap-6 mb-6">
         {/* Matches Created */}
         <Card className="bg-white/20 rounded-lg p-6 flex-1 w-full shadow-2xl">
@@ -120,7 +146,10 @@ const Page = () => {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={currentMatchesData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="rgba(255,255,255,0.1)"
+                />
                 <XAxis
                   dataKey="month"
                   axisLine={false}
@@ -157,7 +186,7 @@ const Page = () => {
           <h3 className="text-lg font-semibold text-white pb-2">
             REAL-TIME SERVER LOAD
           </h3>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
             <span className="text-sm text-gray-300">Live</span>
           </div>
@@ -200,12 +229,17 @@ const Page = () => {
       {/* Matches Created 2 */}
       <Card className="bg-white/20 rounded-lg p-6 flex-1 w-full shadow-2xl mb-6">
         <div className="mb-4">
-          <h4 className="text-lg font-semibold text-white">Matches Created (Detailed View)</h4>
+          <h4 className="text-lg font-semibold text-white">
+            Matches Created (Detailed View)
+          </h4>
         </div>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart data={currentMatchesData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="rgba(255,255,255,0.1)"
+              />
               <XAxis
                 dataKey="month"
                 axisLine={false}
@@ -239,12 +273,10 @@ const Page = () => {
             <div className="mb-4">
               <div className="flex justify-between items-center mb-2">
                 <h4 className="text-lg font-semibold text-gray-800">
-                 User Retention
+                  User Retention
                 </h4>
-             
               </div>
               <div className="border-b-2 border-gray-200 mb-4"></div>
-             
             </div>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -253,17 +285,23 @@ const Page = () => {
                   <XAxis dataKey="version" axisLine={false} tickLine={false} />
                   <YAxis axisLine={false} tickLine={false} />
                   <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="percentage" fill="#6366f1" name="Crash-Free %" />
+                  <Bar
+                    dataKey="percentage"
+                    fill="#6366f1"
+                    name="Crash-Free %"
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </Card>
         </div>
-        
+
         <Card className="bg-white/20 rounded-lg p-6 shadow-2xl">
           <div className="flex flex-col items-center uppercase p-14 text-white max-w-5xl font-[Bebas_Neue] justify-center bg-white/50 rounded-md h-full w-full cursor-pointer hover:bg-white/60 transition-colors">
             <span className="font-bold text-2xl">Churn Rate</span>
-            <span className="font-bold text-7xl">{realTimeMetrics.churnRate.toFixed(1)}%</span>
+            <span className="font-bold text-7xl">
+              {realTimeMetrics.churnRate.toFixed(1)}%
+            </span>
             <p className="w-64 text-center">
               Percentage of users who did not return in the last 30 days.
             </p>
