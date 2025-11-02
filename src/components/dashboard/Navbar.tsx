@@ -14,13 +14,28 @@ import {
   Video,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import ConfirmLogoutModal from "./ConfirmLogoutModal";
 
 const Navbar = () => {
   const [pathname, setPathname] = useState("");
   const location = usePathname();
   const path = location.split("/")[1] || "/";
+  const [logoutOpen, setLogoutOpen] = useState(false);
+
+  const router = useRouter();
+
+  const confirmLogout = () => {
+    try {
+      localStorage.removeItem("token");
+      localStorage.removeItem("auth");
+      sessionStorage.removeItem("token");
+    } catch {
+      // ignore storage errors
+    }
+    router.push("/auth/login");
+  };
 
   useEffect(() => {
     setPathname(path);
@@ -177,14 +192,24 @@ const Navbar = () => {
           <span>Settings</span>
         </div>
       </Link>
-      <Link href={"/auth/login"}>
-        <div
-          className={`flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-colors`}
-        >
-          <LogOut className="w-5 h-5" />
-          <span>Log Out</span>
-        </div>
-      </Link>
+      <div
+        className={`flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-colors cursor-pointer`}
+        onClick={() => setLogoutOpen(true)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") setLogoutOpen(true);
+        }}
+      >
+        <LogOut className="w-5 h-5" />
+        <span>Log Out</span>
+      </div>
+
+      <ConfirmLogoutModal
+        open={logoutOpen}
+        onClose={() => setLogoutOpen(false)}
+        onConfirm={confirmLogout}
+      />
     </nav>
   );
 };
